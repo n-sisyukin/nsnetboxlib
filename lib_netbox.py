@@ -99,7 +99,12 @@ class NetboxAPI:
             data_to_return.extend(temp_response.get('results', []))
             url = temp_response.get('next', [])
 
-            tmp_str = f"{count}-{count-1+len(temp_response.get('results', []))}/{temp_response.get('count', int)}"
+            if temp_response.get('count', int) == 0:
+                tmp_str = '0'
+            elif (count - count-1+len(temp_response.get('results', []))) == 0:
+                tmp_str = f"{count}/{temp_response.get('count', int)}"
+            else:
+                tmp_str = f"{count}-{count-1+len(temp_response.get('results', []))}/{temp_response.get('count', int)}"
             print(f'{mylib.nowDateTime()} - NetBoxAPI: Get {self.__api[part]['desc']} from "{self.__url}" - OK ({tmp_str})\n')
             count += len(temp_response.get('results', []))
         return data_to_return
