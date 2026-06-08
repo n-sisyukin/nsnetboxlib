@@ -32,6 +32,7 @@ class NetboxAPI:
             
             self.__url = config['url']
             self.__apikey = config['apikey']
+            self.__pagesize = config['pagesize']
             self.__api = {'custom_fields': {'url_part': 'extras/custom-fields',            'desc': 'Custom Fields'},
                           'vms':           {'url_part': 'virtualization/virtual-machines', 'desc': 'Virtual Machines'},
                           'cluster_types': {'url_part': 'virtualization/cluster-types',    'desc': 'Cluster Types'},
@@ -89,10 +90,18 @@ class NetboxAPI:
     #-------------------------------------------------------------------------------
 
     def __load(self, part):
-        print(f'{mylib.nowDateTime()} - NetBoxAPI: Get {self.__api[part]['desc']} from "{self.__url}" - ...')
-        temp_response = self.__netbox.get(f"{self.__url}/{self.__api[part]['url_part']}/?limit=0", verify=False).json()
-        data_to_return = temp_response.get('results', [])
-        print(f'{mylib.nowDateTime()} - NetBoxAPI: Get {self.__api[part]['desc']} from "{self.__url}" - OK ({len(data_to_return)})\n')
+        data_to_return = []
+        url = f"{self.__url}/{self.__api[part]['url_part']}/?limit={self.__pagesize}"
+        count = 1
+        while url:
+            print(f'{mylib.nowDateTime()} - NetBoxAPI: Get {self.__api[part]['desc']} from "{self.__url}" - ...')
+            temp_response = self.__netbox.get(url, verify=False).json()
+            data_to_return.extend(temp_response.get('results', []))
+            url = temp_response.get('next', [])
+
+            tmp_str = f"{count}-{count-1+len(temp_response.get('results', []))}/{temp_response.get('count', int)}"
+            print(f'{mylib.nowDateTime()} - NetBoxAPI: Get {self.__api[part]['desc']} from "{self.__url}" - OK ({tmp_str})\n')
+            count += len(temp_response.get('results', []))
         return data_to_return
     
     def loadCustomFields(self):

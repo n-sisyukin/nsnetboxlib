@@ -1,4 +1,5 @@
 {
 	"url": "https://nexbox_address.example/api",
-	"apikey": "aabbccddaabbccddaabbccddaabbccddaabbccdd"
+	"apikey": "aabbccddaabbccddaabbccddaabbccddaabbccdd",
+	"pagesize": 100
 }
