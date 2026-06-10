@@ -33,26 +33,28 @@ class NetboxAPI:
             self.__url = config['url']
             self.__apikey = config['apikey']
             self.__pagesize = config['pagesize']
-            self.__api = {'custom_fields': {'url_part': 'extras/custom-fields',            'desc': 'Custom Fields'},
-                          'vms':           {'url_part': 'virtualization/virtual-machines', 'desc': 'Virtual Machines'},
-                          'cluster_types': {'url_part': 'virtualization/cluster-types',    'desc': 'Cluster Types'},
-                          'clusters':      {'url_part': 'virtualization/clusters',         'desc': 'Clusters'},
-                          'ip_addresses':  {'url_part': 'ipam/ip-addresses',               'desc': 'IP Addresses'},
-                          'ip_ranges':     {'url_part': 'ipam/ip-ranges',                  'desc': 'IP Ranges'},
-                          'ip_prefixes':   {'url_part': 'ipam/prefixes',                   'desc': 'IP Prefixes'},
-                          'vlan_groups':   {'url_part': 'ipam/vlan-groups',                'desc': 'VLAN Groups'},
-                          'vlans':         {'url_part': 'ipam/vlans',                      'desc': 'VLANs'},
-                          'sites':         {'url_part': 'dcim/sites',                      'desc': 'Sites'},
-                          'locations':     {'url_part': 'dcim/locations',                  'desc': 'Locations'},
-                          'racks':         {'url_part': 'dcim/racks',                      'desc': 'Racks'},
-                          'owners':        {'url_part': 'tenancy/contacts',                'desc': 'Owners'},
-                          'manufacturers': {'url_part': 'dcim/manufacturers',              'desc': 'Manufacturers'},
-                          'platforms':     {'url_part': 'dcim/platforms',                  'desc': 'Platforms'},
-                          'device_roles':  {'url_part': 'dcim/device-roles',               'desc': 'Device Roles'},
-                          'device_types':  {'url_part': 'dcim/device-types',               'desc': 'Device Types'},
-                          'devices':       {'url_part': 'dcim/devices',                    'desc': 'Devices'}} 
+            self.__api = {'custom_fields':        {'url_part': 'extras/custom-fields',            'desc': 'Custom Fields'},
+                          'vms':                  {'url_part': 'virtualization/virtual-machines', 'desc': 'Virtual Machines'},
+                          'vm_interfaces':        {'url_part': 'virtualization/interfaces',       'desc': 'VM Interfaces'},
+                          'cluster_types':        {'url_part': 'virtualization/cluster-types',    'desc': 'Cluster Types'},
+                          'clusters':             {'url_part': 'virtualization/clusters',         'desc': 'Clusters'},
+                          'ip_addresses':         {'url_part': 'ipam/ip-addresses',               'desc': 'IP Addresses'},
+                          'ip_ranges':            {'url_part': 'ipam/ip-ranges',                  'desc': 'IP Ranges'},
+                          'ip_prefixes':          {'url_part': 'ipam/prefixes',                   'desc': 'IP Prefixes'},
+                          'vlan_groups':          {'url_part': 'ipam/vlan-groups',                'desc': 'VLAN Groups'},
+                          'vlans':                {'url_part': 'ipam/vlans',                      'desc': 'VLANs'},
+                          'sites':                {'url_part': 'dcim/sites',                      'desc': 'Sites'},
+                          'locations':            {'url_part': 'dcim/locations',                  'desc': 'Locations'},
+                          'racks':                {'url_part': 'dcim/racks',                      'desc': 'Racks'},
+                          'owners':               {'url_part': 'tenancy/contacts',                'desc': 'Owners'},
+                          'manufacturers':        {'url_part': 'dcim/manufacturers',              'desc': 'Manufacturers'},
+                          'platforms':            {'url_part': 'dcim/platforms',                  'desc': 'Platforms'},
+                          'device_roles':         {'url_part': 'dcim/device-roles',               'desc': 'Device Roles'},
+                          'device_types':         {'url_part': 'dcim/device-types',               'desc': 'Device Types'},
+                          'devices':              {'url_part': 'dcim/devices',                    'desc': 'Devices'},
+                          'device_interfaces':    {'url_part': 'dcim/interfaces',                 'desc': 'Device Interfaces'}} 
             self.__cf = {}
-            self.__headers = {'Authorization': f'Token {self.__apikey}', 'Content-Type': 'application/json','Accept': 'application/json'}
+            self.__headers = {'Authorization': f'{self.__apikey}', 'Content-Type': 'application/json','Accept': 'application/json'}
 
             print(f'{mylib.nowDateTime()} - NetboxAPI: Connecting to "{self.__url}" - ...')
             self.__netbox = rq.Session()
@@ -199,6 +201,16 @@ class NetboxAPI:
         result = temp
         return result
     
+    def loadDeviceInterfaces(self):
+        temp = self.__load('device_interfaces')
+        result = temp
+        return result
+    
+    def loadVMInterfaces(self):
+        temp = self.__load('vm_interfaces')
+        result = temp
+        return result
+    
     #-------------------------------------------------------------------------------
     
     def __create(self, part, data_to_create):
@@ -326,6 +338,12 @@ class NetboxAPI:
 
     def createDevices(self, data_to_create):
         return(self.__create('devices', data_to_create))
+
+    def createDeviceInterfaces(self, data_to_create):
+        return(self.__create('device_interfaces', data_to_create))
+    
+    def createVMInterfaces(self, data_to_create):
+        return(self.__create('vm_interfaces', data_to_create))
 
     #-------------------------------------------------------------------------------
 
@@ -455,6 +473,12 @@ class NetboxAPI:
     def updateDevices(self, data_to_update):
         return(self.__update('devices', data_to_update))
 
+    def updateDeviceInterfaces(self, data_to_update):
+        return(self.__update('device_interfaces', data_to_update))
+    
+    def updateVMInterfaces(self, data_to_update):
+        return(self.__update('vm_interfaces', data_to_update))
+
     #-------------------------------------------------------------------------------
 
     def __delete(self, part, data_to_delete):
@@ -583,6 +607,12 @@ class NetboxAPI:
     def deleteDevices(self, data_to_delete):
         return(self.__delete('devices', data_to_delete))
 
+    def deleteDeviceInterfaces(self, data_to_delete):
+        return(self.__delete('device_interfaces', data_to_delete))
+    
+    def deleteVMInterfaces(self, data_to_delete):
+        return(self.__delete('vm_interfaces', data_to_delete))
+
     #-------------------------------------------------------------------------------
 
     
@@ -595,24 +625,26 @@ class NetboxAPI:
             if self.__response_of_request is not None:
                 if self.__response_of_request.status_code == 200:
                     result = {}
-                    result['custom_fields'] = self.loadCustomFields()
-                    result['vms'] =           self.loadVMs()
-                    result['cluster_types'] = self.loadClusterTypes()
-                    result['clusters'] =      self.loadClusters()
-                    result['ip_addresses'] =  self.loadIPAddresses()
-                    result['ip_ranges'] =     self.loadIPRanges()
-                    result['ip_prefixes'] =   self.loadIPPrefixes()
-                    result['vlan_groups'] =   self.loadVlanGroups()
-                    result['vlans'] =         self.loadVlans()
-                    result['sites'] =         self.loadSites()
-                    result['locations'] =     self.loadLocations()
-                    result['racks'] =         self.loadRacks()
-                    result['owners'] =        self.loadOwners()
-                    result['manufacturers'] = self.loadManufacturers()
-                    result['platforms'] =     self.loadPlatforms()
-                    result['device_roles'] =  self.loadDeviceRoles()
-                    result['device_types'] =  self.loadDeviceTypes()
-                    result['devices'] =       self.loadDevices()
+                    result['custom_fields'] =        self.loadCustomFields()
+                    result['vms'] =                  self.loadVMs()
+                    result['cluster_types'] =        self.loadClusterTypes()
+                    result['clusters'] =             self.loadClusters()
+                    result['ip_addresses'] =         self.loadIPAddresses()
+                    result['ip_ranges'] =            self.loadIPRanges()
+                    result['ip_prefixes'] =          self.loadIPPrefixes()
+                    result['vlan_groups'] =          self.loadVlanGroups()
+                    result['vlans'] =                self.loadVlans()
+                    result['sites'] =                self.loadSites()
+                    result['locations'] =            self.loadLocations()
+                    result['racks'] =                self.loadRacks()
+                    result['owners'] =               self.loadOwners()
+                    result['manufacturers'] =        self.loadManufacturers()
+                    result['platforms'] =            self.loadPlatforms()
+                    result['device_roles'] =         self.loadDeviceRoles()
+                    result['device_types'] =         self.loadDeviceTypes()
+                    result['devices'] =              self.loadDevices()
+                    result['device_interfaces'] =    self.loadDeviceInterfaces()
+                    result['vm_interfaces'] =        self.loadVMInterfaces()
                     return result
         else:
             print(f'{mylib.nowDateTime()} - NetBoxAPI: Reading data from file "{self.__input_data_file}" - ...')
