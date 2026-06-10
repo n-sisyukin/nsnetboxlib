@@ -112,104 +112,64 @@ class NetboxAPI:
         return data_to_return
     
     def loadCustomFields(self):
-        temp = self.__load('custom_fields')
-        result = temp
-        return result
+        return self.__load('custom_fields')
 
     def loadVMs(self):
-        temp = self.__load('vms')
-        result = temp
-        return result
+        return self.__load('vms')
     
     def loadClusterTypes(self):
-        temp = self.__load('cluster_types')
-        result = temp
-        return result
+        return self.__load('cluster_types')
 
     def loadClusters(self):
-        temp = self.__load('clusters')
-        result = temp
-        return result
+        return self.__load('clusters')
 
     def loadIPAddresses(self):
-        temp = self.__load('ip_addresses')
-        result = temp
-        return result        
+        return self.__load('ip_addresses')
 
     def loadIPRanges(self):
-        temp = self.__load('ip_ranges')
-        result = temp
-        return result
+        return self.__load('ip_ranges')
 
     def loadIPPrefixes(self):
-        temp = self.__load('ip_prefixes')
-        result = temp
-        return result
+        return self.__load('ip_prefixes')
     
     def loadVlanGroups(self):
-        temp = self.__load('vlan_groups')
-        result = temp
-        return result
+        return self.__load('vlan_groups')
 
     def loadVlans(self):
-        temp = self.__load('vlans')
-        result = temp
-        return result
+        return self.__load('vlans')
     
     def loadSites(self):
-        temp = self.__load('sites')
-        result = temp
-        return result
+        return self.__load('sites')
     
     def loadLocations(self):
-        temp = self.__load('locations')
-        result = temp
-        return result
+        return self.__load('locations')
     
     def loadRacks(self):
-        temp = self.__load('racks')
-        result = temp
-        return result
+        return self.__load('racks')
     
     def loadOwners(self):
-        temp = self.__load('owners')
-        result = temp
-        return result
+        return self.__load('owners')
     
     def loadManufacturers(self):
-        temp = self.__load('manufacturers')
-        result = temp
-        return result
+        return self.__load('manufacturers')
     
     def loadPlatforms(self):
-        temp = self.__load('platforms')
-        result = temp
-        return result
+        return self.__load('platforms')
     
     def loadDeviceRoles(self):
-        temp = self.__load('device_roles')
-        result = temp
-        return result
+        return self.__load('device_roles')
     
     def loadDeviceTypes(self):
-        temp = self.__load('device_types')
-        result = temp
-        return result
+        return self.__load('device_types')
     
     def loadDevices(self):
-        temp = self.__load('devices')
-        result = temp
-        return result
+        return self.__load('devices')
     
     def loadDeviceInterfaces(self):
-        temp = self.__load('device_interfaces')
-        result = temp
-        return result
+        return self.__load('device_interfaces')
     
     def loadVMInterfaces(self):
-        temp = self.__load('vm_interfaces')
-        result = temp
-        return result
+        return self.__load('vm_interfaces')
     
     #-------------------------------------------------------------------------------
     
