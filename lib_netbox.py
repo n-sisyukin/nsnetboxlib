@@ -33,26 +33,27 @@ class NetboxAPI:
             self.__url = config['url']
             self.__apikey = config['apikey']
             self.__pagesize = config['pagesize']
-            self.__api = {'custom_fields':        {'url_part': 'extras/custom-fields',            'desc': 'Custom Fields'},
-                          'vms':                  {'url_part': 'virtualization/virtual-machines', 'desc': 'Virtual Machines'},
-                          'vm_interfaces':        {'url_part': 'virtualization/interfaces',       'desc': 'VM Interfaces'},
-                          'cluster_types':        {'url_part': 'virtualization/cluster-types',    'desc': 'Cluster Types'},
-                          'clusters':             {'url_part': 'virtualization/clusters',         'desc': 'Clusters'},
-                          'ip_addresses':         {'url_part': 'ipam/ip-addresses',               'desc': 'IP Addresses'},
-                          'ip_ranges':            {'url_part': 'ipam/ip-ranges',                  'desc': 'IP Ranges'},
-                          'ip_prefixes':          {'url_part': 'ipam/prefixes',                   'desc': 'IP Prefixes'},
-                          'vlan_groups':          {'url_part': 'ipam/vlan-groups',                'desc': 'VLAN Groups'},
-                          'vlans':                {'url_part': 'ipam/vlans',                      'desc': 'VLANs'},
-                          'sites':                {'url_part': 'dcim/sites',                      'desc': 'Sites'},
-                          'locations':            {'url_part': 'dcim/locations',                  'desc': 'Locations'},
-                          'racks':                {'url_part': 'dcim/racks',                      'desc': 'Racks'},
-                          'owners':               {'url_part': 'tenancy/contacts',                'desc': 'Owners'},
-                          'manufacturers':        {'url_part': 'dcim/manufacturers',              'desc': 'Manufacturers'},
-                          'platforms':            {'url_part': 'dcim/platforms',                  'desc': 'Platforms'},
-                          'device_roles':         {'url_part': 'dcim/device-roles',               'desc': 'Device Roles'},
-                          'device_types':         {'url_part': 'dcim/device-types',               'desc': 'Device Types'},
-                          'devices':              {'url_part': 'dcim/devices',                    'desc': 'Devices'},
-                          'device_interfaces':    {'url_part': 'dcim/interfaces',                 'desc': 'Device Interfaces'}} 
+            self.__api = {'custom_fields':          {'url_part': 'extras/custom-fields',            'desc': 'Custom Fields'},
+                          'custom_field_choices':   {'url_part': 'extras/custom-field-choice-sets', 'desc': 'Custom Fields Choices'},
+                          'vms':                    {'url_part': 'virtualization/virtual-machines', 'desc': 'Virtual Machines'},
+                          'vm_interfaces':          {'url_part': 'virtualization/interfaces',       'desc': 'VM Interfaces'},
+                          'cluster_types':          {'url_part': 'virtualization/cluster-types',    'desc': 'Cluster Types'},
+                          'clusters':               {'url_part': 'virtualization/clusters',         'desc': 'Clusters'},
+                          'ip_addresses':           {'url_part': 'ipam/ip-addresses',               'desc': 'IP Addresses'},
+                          'ip_ranges':              {'url_part': 'ipam/ip-ranges',                  'desc': 'IP Ranges'},
+                          'ip_prefixes':            {'url_part': 'ipam/prefixes',                   'desc': 'IP Prefixes'},
+                          'vlan_groups':            {'url_part': 'ipam/vlan-groups',                'desc': 'VLAN Groups'},
+                          'vlans':                  {'url_part': 'ipam/vlans',                      'desc': 'VLANs'},
+                          'sites':                  {'url_part': 'dcim/sites',                      'desc': 'Sites'},
+                          'locations':              {'url_part': 'dcim/locations',                  'desc': 'Locations'},
+                          'racks':                  {'url_part': 'dcim/racks',                      'desc': 'Racks'},
+                          'owners':                 {'url_part': 'tenancy/contacts',                'desc': 'Owners'},
+                          'manufacturers':          {'url_part': 'dcim/manufacturers',              'desc': 'Manufacturers'},
+                          'platforms':              {'url_part': 'dcim/platforms',                  'desc': 'Platforms'},
+                          'device_roles':           {'url_part': 'dcim/device-roles',               'desc': 'Device Roles'},
+                          'device_types':           {'url_part': 'dcim/device-types',               'desc': 'Device Types'},
+                          'devices':                {'url_part': 'dcim/devices',                    'desc': 'Devices'},
+                          'device_interfaces':      {'url_part': 'dcim/interfaces',                 'desc': 'Device Interfaces'}} 
             self.__cf = {}
             self.__headers = {'Authorization': f'{self.__apikey}', 'Content-Type': 'application/json','Accept': 'application/json'}
 
@@ -93,7 +94,8 @@ class NetboxAPI:
 
     def __load(self, part):
         data_to_return = []
-        url = f"{self.__url}/{self.__api[part]['url_part']}/?limit={self.__pagesize}"
+        # url = f"{self.__url}/{self.__api[part]['url_part']}/?limit={self.__pagesize}"
+        url = f"{self.__url}/{self.__api[part]['url_part']}/?limit={self.__pagesize}&ordering=id"
         count = 1
         while url:
             print(f'{mylib.nowDateTime()} - NetBoxAPI: Get {self.__api[part]['desc']} from "{self.__url}" - ...')
@@ -114,6 +116,9 @@ class NetboxAPI:
     def loadCustomFields(self):
         return self.__load('custom_fields')
 
+    def loadCustomFieldsChoices(self):
+        return self.__load('custom_field_choices')
+    
     def loadVMs(self):
         return self.__load('vms')
     
@@ -243,6 +248,9 @@ class NetboxAPI:
     
     def createCustomFields(self, data_to_create):
         return(self.__create('custom_fields', data_to_create))
+    
+    def createCustomFieldsChoices(self, data_to_create):
+        return self.__create('custom_field_choices', data_to_create)
 
     def createVMs(self, data_to_create):
         return(self.__create('vms', data_to_create))
@@ -377,6 +385,9 @@ class NetboxAPI:
     
     def updateCustomFields(self, data_to_update):
         return(self.__update('custom_fields', data_to_update))
+    
+    def updateCustomFieldsChoices(self, data_to_update):
+        return(self.__update('custom_field_choices', data_to_update))
 
     def updateVMs(self, data_to_update):
         return(self.__update('vms', data_to_update))
@@ -511,6 +522,9 @@ class NetboxAPI:
 
     def deleteCustomFields(self, data_to_delete):
         return(self.__delete('custom_fields', data_to_delete))
+    
+    def deleteCustomFieldsChoices(self, data_to_delete):
+        return(self.__delete('custom_field_choices', data_to_delete))
 
     def deleteVMs(self, data_to_delete):
         return(self.__delete('vms', data_to_delete))
@@ -586,6 +600,7 @@ class NetboxAPI:
                 if self.__response_of_request.status_code == 200:
                     result = {}
                     result['custom_fields'] =        self.loadCustomFields()
+                    result['custom_field_choices'] = self.loadCustomFieldsChoices()
                     result['vms'] =                  self.loadVMs()
                     result['cluster_types'] =        self.loadClusterTypes()
                     result['clusters'] =             self.loadClusters()
